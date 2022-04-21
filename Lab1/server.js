@@ -21,8 +21,8 @@ const server = http.createServer(function (request, response) {
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'local',
-    database: 'users'
+    password: 'root',
+    database: 'itsecurity'
 });
 
 
@@ -31,9 +31,12 @@ connection.connect(function (err) {
     console.log("Connected to Database!");
 });
 
-connection.query('SELECT * FROM username  ', function (error, results, fields) {
+var x = document.getElementById("")
+
+
+connection.query('SELECT * FROM accounts  ', function (error, results, fields) {
     if (error) throw error;
-    console.log('The solution is: ', results[0].id);
+    console.log('The solution is: ', results);
 });
 
 connection.end();
