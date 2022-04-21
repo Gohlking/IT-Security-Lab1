@@ -26,11 +26,14 @@ var connection = mysql.createConnection({
 });
 
 
-connection.connect();
+connection.connect(function (err) {
+    if (err) throw err;
+    console.log("Connected to Database!");
+});
 
-connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
+connection.query('SELECT * FROM username  ', function (error, results, fields) {
     if (error) throw error;
-    console.log('The solution is: ', results[0].solution);
+    console.log('The solution is: ', results[0].id);
 });
 
 connection.end();
