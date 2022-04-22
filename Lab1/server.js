@@ -69,18 +69,40 @@ app.post('/auth', function(request, response) {
 	}
 });
 
+
 // http://localhost:3000/home
 app.get('/home', function(request, response) {
 	// If the user is loggedin
 	if (request.session.loggedin) {
 		// Output username
         response.sendFile(path.join(__dirname + '/home.html'));
+
+        connection.query('SELECT text FROM notes ORDER BY ID DESC',function(error, results){
+         // If there is an issue with the query, output the error
+			if (error) throw error; 
+
+        });
+
 	} else {
 		// Not logged in
 		response.send('Please login to view this page!');
 	}
 });
 
+// http://localhost:3000/post
+app.post('/post', function(request, response) {
+	// Capture the input fields
+	let username = request.session.username;
+    let note = request.body.note;
+
+    connection.query('INSERT INTO notes(username,text) VALUES(?,?)', [username, note], function(error, results, fields){
+        // If there is an issue with the query, output the error
+			if (error) throw error;
+    });
+    response.redirect('/home');
+
+}  
+);
 
 
 
