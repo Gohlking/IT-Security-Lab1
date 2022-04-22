@@ -77,12 +77,6 @@ app.get('/home', function(request, response) {
 		// Output username
         response.sendFile(path.join(__dirname + '/home.html'));
 
-        connection.query('SELECT text FROM notes ORDER BY ID DESC',function(error, results){
-         // If there is an issue with the query, output the error
-			if (error) throw error; 
-
-        });
-
 	} else {
 		// Not logged in
 		response.send('Please login to view this page!');
@@ -104,6 +98,30 @@ app.post('/post', function(request, response) {
 }  
 );
 
+// http://localhost:3000/showposts
+app.get('/allposts', function(request, response) {
+	// If the user is loggedin
+	if (request.session.loggedin) {
+		connection.query('SELECT text FROM notes ORDER BY ID DESC',function(error, results){
+            // If there is an issue with the query, output the error
+               if (error) throw error; 
+                var length = results.length;
+                let url = "";
+                for(let i=0;i<length;i++){
+                    url = url + results[i].text;
+                    url = url + "\n";
+                }    
+               // response.send(url);
+               response.write(url);
+               response.end();
+               
+           });
+
+	} else {
+		// Not logged in
+		response.send('Please login to view this page!');
+	}
+});
 
 
 
