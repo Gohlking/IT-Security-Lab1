@@ -38,6 +38,13 @@
         opacity: 0.8;
       }
 
+      p{
+        padding: 1em;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        border: 1px solid black;
+      }
+
       .container {
         padding: 16px;
       }
@@ -60,8 +67,14 @@
   </form>
   <div>
     <form action="/allposts" method="get">
+      <h3>Alle Posts</h3>
+      <div>
+        <% for(var i=0; i< buttonName.length; i++) {%>
+            <p><%= buttonName[i].text %></p>
+          <% } %>
+      </div>
       <button type="showposts">
-        <%- buttonName %>
+        Show Posts
       </button>
     </form>
   </div>

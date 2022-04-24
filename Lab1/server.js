@@ -113,14 +113,13 @@ app.get('/allposts', function (request, response) {
                 url = url + results[i].text;
                 url = url + "\n";
                 console.log(results[i].text);
-
             }
             // response.send(url);
             //response.write(url);
             //response.end();
 
-            const testVariable = "Backend Text"
-            response.render(path.join(__dirname + '/home.ejs'), { buttonName: results[1].text });
+            //const testVariable = "Backend Text"
+            response.render(path.join(__dirname + '/home.ejs'), { buttonName: results });
 
         });
 
