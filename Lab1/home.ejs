@@ -6,11 +6,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="server.js"></script>
     <title>Homepage</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      
+      h1{
+        text-align: center;
+      }
 
+      textarea{
+        width: 100%;
+        padding: 12px 20px;
+        margin-top: 1em;
+        display: inline-block;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+      }
+
+      button {
+        background-color: lightblue;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+      }
+
+      button:hover {
+        opacity: 0.8;
+      }
+
+      .container {
+        padding: 16px;
+      }
+
+      span.psw {
+        float: right;
+        padding-top: 16px;
+      }
     </style>
   </head>
   <body>
-    <h1>Welcome Home</h1>
+    <h1>Welcome Back</h1>
     <form action="/post" method="post">
     <div class="container">
       <label for="notes"><strong>Notizen</b></label>
