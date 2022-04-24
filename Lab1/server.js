@@ -76,8 +76,12 @@ app.post('/auth', function (request, response) {
 app.get('/home', function (request, response) {
     // If the user is loggedin
     if (request.session.loggedin) {
-        // Output username
-        response.sendFile(path.join(__dirname + '/home.html'));
+        connection.query('SELECT text FROM notes ORDER BY ID DESC', function (error, results) {
+            // If there is an issue with the query, output the error
+            if (error) throw error;
+            response.render(path.join(__dirname + '/home.ejs'), { buttonName: results });
+
+        });
 
     } else {
         // Not logged in
@@ -101,7 +105,7 @@ app.post('/post', function (request, response) {
 );
 
 // http://localhost:3000/showposts
-app.get('/allposts', function (request, response) {
+/*app.get('/allposts', function (request, response) {
     // If the user is loggedin
     if (request.session.loggedin) {
         connection.query('SELECT text FROM notes ORDER BY ID DESC', function (error, results) {
@@ -128,6 +132,8 @@ app.get('/allposts', function (request, response) {
         response.send('Please login to view this page!');
     }
 });
+
+*/
 
 // http://localhost:3000/
 app.get('/test', function (request, response) {
