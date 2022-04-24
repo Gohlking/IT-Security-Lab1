@@ -14,7 +14,7 @@ var mysql = require('mysql');
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'root',
+    password: 'local',
     database: 'itsecurity'
 });
 
@@ -24,6 +24,8 @@ connection.connect(function (err) {
 });
 
 const app = express();
+//app.set("views", path.join(__dirname + "views"))
+app.set("view engine", "ejs");
 
 app.use(session({
     secret: "secret",
@@ -35,96 +37,105 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'static')));
 
 // http://localhost:3000/
-app.get('/', function(request, response) {
-	// Render login template
-	response.sendFile(path.join(__dirname + '/login.html'));
+app.get('/', function (request, response) {
+    // Render login template
+    response.sendFile(path.join(__dirname + '/login.html'));
 });
 
 // http://localhost:3000/auth
-app.post('/auth', function(request, response) {
-	// Capture the input fields
-	let username = request.body.username;
-	let password = request.body.password;
-	// Ensure the input fields exists and are not empty
-	if (username && password) {
-		// Execute SQL query that'll select the account from the database based on the specified username and password
-		connection.query('SELECT * FROM accounts WHERE username = ? AND password = ?', [username, password], function(error, results, fields) {
-			// If there is an issue with the query, output the error
-			if (error) throw error;
-			// If the account exists
-			if (results.length > 0) {
-				// Authenticate the user
-				request.session.loggedin = true;
-				request.session.username = username;
-				// Redirect to home page
-				response.redirect('/home');
-			} else {
-				response.redirect('/');
-			}			
-			response.end();
-		});
-	} else {
-		response.send('Please enter Username and Password!');
-		response.end();
-	}
+app.post('/auth', function (request, response) {
+    // Capture the input fields
+    let username = request.body.username;
+    let password = request.body.password;
+    // Ensure the input fields exists and are not empty
+    if (username && password) {
+        // Execute SQL query that'll select the account from the database based on the specified username and password
+        connection.query('SELECT * FROM accounts WHERE username = ? AND password = ?', [username, password], function (error, results, fields) {
+            // If there is an issue with the query, output the error
+            if (error) throw error;
+            // If the account exists
+            if (results.length > 0) {
+                // Authenticate the user
+                request.session.loggedin = true;
+                request.session.username = username;
+                // Redirect to home page
+                response.redirect('/home');
+            } else {
+                response.redirect('/');
+            }
+            response.end();
+        });
+    } else {
+        response.send('Please enter Username and Password!');
+        response.end();
+    }
 });
 
 
 // http://localhost:3000/home
-app.get('/home', function(request, response) {
-	// If the user is loggedin
-	if (request.session.loggedin) {
-		// Output username
+app.get('/home', function (request, response) {
+    // If the user is loggedin
+    if (request.session.loggedin) {
+        // Output username
         response.sendFile(path.join(__dirname + '/home.html'));
 
-	} else {
-		// Not logged in
-		response.send('Please login to view this page!');
-	}
+    } else {
+        // Not logged in
+        response.send('Please login to view this page!');
+    }
 });
 
 // http://localhost:3000/post
-app.post('/post', function(request, response) {
-	// Capture the input fields
-	let username = request.session.username;
+app.post('/post', function (request, response) {
+    // Capture the input fields
+    let username = request.session.username;
     let note = request.body.note;
 
-    connection.query('INSERT INTO notes(username,text) VALUES(?,?)', [username, note], function(error, results, fields){
+    connection.query('INSERT INTO notes(username,text) VALUES(?,?)', [username, note], function (error, results, fields) {
         // If there is an issue with the query, output the error
-			if (error) throw error;
+        if (error) throw error;
     });
     response.redirect('/home');
 
-}  
+}
 );
 
 // http://localhost:3000/showposts
-app.get('/allposts', function(request, response) {
-	// If the user is loggedin
-	if (request.session.loggedin) {
-		connection.query('SELECT text FROM notes ORDER BY ID DESC',function(error, results){
+app.get('/allposts', function (request, response) {
+    // If the user is loggedin
+    if (request.session.loggedin) {
+        connection.query('SELECT text FROM notes ORDER BY ID DESC', function (error, results) {
             // If there is an issue with the query, output the error
-               if (error) throw error; 
-                var length = results.length;
-                let url = "";
-                for(let i=0;i<length;i++){
-                    url = url + results[i].text;
-                    url = url + "\n";
-                }    
-               // response.send(url);
-               response.write(url);
-               response.end();
-               
-           });
+            if (error) throw error;
+            var length = results.length;
+            let url = "";
+            for (let i = 0; i < length; i++) {
+                url = url + results[i].text;
+                url = url + "\n";
+                console.log(results[i].text);
 
-	} else {
-		// Not logged in
-		response.send('Please login to view this page!');
-	}
+            }
+            // response.send(url);
+            //response.write(url);
+            //response.end();
+
+            const testVariable = "Backend Text"
+            response.render(path.join(__dirname + '/home.ejs'), { buttonName: results[1].text });
+
+        });
+
+    } else {
+        // Not logged in
+        response.send('Please login to view this page!');
+    }
 });
 
-
-
+// http://localhost:3000/
+app.get('/test', function (request, response) {
+    // Render login template
+    const testVariable = "Backend Text"
+    response.render(path.join(__dirname + '/home.ejs'), { buttonName: testVariable });
+});
 
 app.listen(3000);
 
