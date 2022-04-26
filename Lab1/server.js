@@ -14,7 +14,7 @@ var mysql = require('mysql');
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'root',
+    password: 'local',
     database: 'itsecurity'
 });
 
@@ -50,17 +50,17 @@ app.post('/auth', function (request, response) {
     // Ensure the input fields exists and are not empty
     if (username && password) {
         // Execute SQL query that'll select the account from the database based on the specified username and password
-           // https://blog.sqreen.com/preventing-sql-injection-in-node-js-and-other-vulnerabilities/
+        // https://blog.sqreen.com/preventing-sql-injection-in-node-js-and-other-vulnerabilities/
 
-           // First Vulnerability SQL Injection
-           // E.g   Username : "dustin" password: "test"  in the database
-            //Injection: username input : "dustin'; -- "
-           // With the added signs the password is irrelevant and u get access to the user dustin
+        // First Vulnerability SQL Injection
+        // E.g   Username : "dustin" password: "test"  in the database
+        //Injection: username input : "dustin'; -- "
+        // With the added signs the password is irrelevant and u get access to the user dustin
 
-           // OLD Query changed to get the SQL Injection:
-           //connection.query('SELECT * FROM accounts WHERE username = ? AND password = ?', [username, password], function (error, results, fields) {
+        // OLD Query changed to get the SQL Injection:
+        //connection.query('SELECT * FROM accounts WHERE username = ? AND password = ?', [username, password], function (error, results, fields) {
 
-        connection.query("SELECT * FROM accounts WHERE username = '"+ request.body.username +"' AND password = '"+ request.body.password +"'", function (error, results) {
+        connection.query("SELECT * FROM accounts WHERE username = '" + request.body.username + "' AND password = '" + request.body.password + "'", function (error, results) {
             // If there is an issue with the query, output the error
             if (error) throw error;
             // If the account exists
@@ -114,42 +114,12 @@ app.post('/post', function (request, response) {
 }
 );
 
-// http://localhost:3000/showposts
-/*app.get('/allposts', function (request, response) {
-    // If the user is loggedin
-    if (request.session.loggedin) {
-        connection.query('SELECT text FROM notes ORDER BY ID DESC', function (error, results) {
-            // If there is an issue with the query, output the error
-            if (error) throw error;
-            var length = results.length;
-            let url = "";
-            for (let i = 0; i < length; i++) {
-                url = url + results[i].text;
-                url = url + "\n";
-                console.log(results[i].text);
-            }
-            // response.send(url);
-            //response.write(url);
-            //response.end();
-
-            //const testVariable = "Backend Text"
-            response.render(path.join(__dirname + '/home.ejs'), { buttonName: results });
-
-        });
-
-    } else {
-        // Not logged in
-        response.send('Please login to view this page!');
-    }
-});
-
-*/
 
 // http://localhost:3000/
 app.get('/test', function (request, response) {
     // Render login template
-    const testVariable = "Backend Text"
-    response.render(path.join(__dirname + '/home.ejs'), { buttonName: testVariable });
+    response.send("<script>alert(document.cookie)</script>")
+    //response.render(path.join(__dirname + '/home.ejs'), { buttonName: testVariable });
 });
 
 app.listen(3000);

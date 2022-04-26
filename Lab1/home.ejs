@@ -1,83 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="server.js"></script>
-    <title>Homepage</title>
-    <style>
-      body {
-        font-family: Arial, Helvetica, sans-serif;
-      }
-      
-      h1{
-        text-align: center;
-      }
 
-      textarea{
-        width: 100%;
-        padding: 12px 20px;
-        margin-top: 1em;
-        display: inline-block;
-        border: 1px solid #ccc;
-        box-sizing: border-box;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="server.js"></script>
+  <title>Patrick Thümer and Dustin Gohl</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
-      button {
-        background-color: lightblue;
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-      }
+    h1 {
+      text-align: center;
+    }
 
-      button:hover {
-        opacity: 0.8;
-      }
+    footer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      background-color: black;
+      color: white;
+      text-align: center;
+    }
 
-      p{
-        padding: 1em;
-        margin-top: 1em;
-        margin-bottom: 1em;
-        border: 1px solid black;
-      }
+    textarea {
+      width: 100%;
 
-      .container {
-        padding: 16px;
-      }
+      margin-top: 0em;
+      display: inline-block;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
 
-      span.psw {
-        float: right;
-        padding-top: 16px;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Welcome Back</h1>
-    <form action="/post" method="post">
+    button {
+      background-color: lightskyblue;
+      color: black;
+      font-weight: bold;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      opacity: 0.8;
+    }
+
+    p {
+      padding: 1em;
+      margin-top: 1em;
+      margin-bottom: 1em;
+      border: 1px solid black;
+    }
+
+    .container {
+      padding: 16px;
+    }
+
+    span.psw {
+      float: right;
+      padding-top: 16px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Welcome Back!</h1>
+  <form action="/post" method="post">
     <div class="container">
-      <label for="notes"><strong>Notizen</b></label>
-      <br>
-      <textarea type ="text" placeholder="Enter your Note" rows="4" cols="50" name="note" id="note" required></textarea>
+
+
+      <textarea type="text" placeholder="Add new note here..." rows="4" cols="50" name="note" id="note"
+        required></textarea>
       <br>
       <button type="save">Save</button>
   </form>
   <div>
-    <form action="/allposts" method="get">
-      <h3>Alle Posts</h3>
+    <form action="/test" method="get">
+      <h3>All Posts</h3>
       <div>
         <% for(var i=0; i< buttonName.length; i++) {%>
-            <p><%= buttonName[i].text %></p>
+          <p>
+            <%= buttonName[i].text %>
+          </p>
           <% } %>
       </div>
       <button type="showposts">
-        Show Posts
+        XSS Attack
       </button>
     </form>
   </div>
-
-  </body>
+</body>
+<footer>&copy; IT-Security by Patrick Thümer and Dustin Gohl</footer>
 </html>
