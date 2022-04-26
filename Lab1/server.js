@@ -51,16 +51,16 @@ app.post('/auth', function (request, response) {
     if (username && password) {
         // Execute SQL query that'll select the account from the database based on the specified username and password
            // https://blog.sqreen.com/preventing-sql-injection-in-node-js-and-other-vulnerabilities/
-           
+
            // First Vulnerability SQL Injection
            // E.g   Username : "dustin" password: "test"  in the database
-            //Injection: username input : "dustin'; --"
+            //Injection: username input : "dustin'; -- "
            // With the added signs the password is irrelevant and u get access to the user dustin
 
            // OLD Query changed to get the SQL Injection:
            //connection.query('SELECT * FROM accounts WHERE username = ? AND password = ?', [username, password], function (error, results, fields) {
 
-        connection.query("SELECT * FROM accounts WHERE username = '"+ request.body.username +"' AND password = '"+ request.body.password +"'", function (error, results, fields) {
+        connection.query("SELECT * FROM accounts WHERE username = '"+ request.body.username +"' AND password = '"+ request.body.password +"'", function (error, results) {
             // If there is an issue with the query, output the error
             if (error) throw error;
             // If the account exists
