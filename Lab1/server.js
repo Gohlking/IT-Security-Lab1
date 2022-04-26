@@ -14,7 +14,7 @@ var mysql = require('mysql');
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'local',
+    password: 'root',
     database: 'itsecurity'
 });
 
@@ -30,7 +30,12 @@ app.set("view engine", "ejs");
 app.use(session({
     secret: "secret",
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    // Seconds vulnerability, xss attack is possible and cookie can get output by adding
+    // onmouseover = alert(document.cookie)
+    // console.log(document.cookie)
+    cookie: { httpOnly: false },
+    keys: [session.loggedin]
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
