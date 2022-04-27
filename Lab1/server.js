@@ -89,20 +89,22 @@ app.post('/auth', function (request, response) {
 
 
 // http://localhost:3000/home
+// CODE BY DUSTIN UND PATRICK
 app.get('/home', function (request, response) {
+
     // If the user is loggedin
-    if (request.session.loggedin) {
-        connection.query('SELECT text FROM notes ORDER BY ID DESC', function (error, results) {
-            // If there is an issue with the query, output the error
-            if (error) throw error;
-            response.render(path.join(__dirname + '/home.ejs'), { buttonName: results });
+    //if (request.session.loggedin) {
+    connection.query('SELECT text FROM notes ORDER BY ID DESC', function (error, results) {
+        // If there is an issue with the query, output the error
+        if (error) throw error;
+        response.render(path.join(__dirname + '/home.ejs'), { buttonName: results });
 
-        });
+    });
 
-    } else {
-        // Not logged in
-        response.send('Please login to view this page!');
-    }
+    //} else {
+    // Not logged in
+    //response.send('Please login to view this page!');
+    //}
 });
 
 // http://localhost:3000/post
