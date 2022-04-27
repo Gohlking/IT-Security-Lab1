@@ -14,7 +14,7 @@ var mysql = require('mysql');
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'root',
+    password: 'local',
     database: 'itsecurity'
 });
 
@@ -121,9 +121,9 @@ app.post('/post', function (request, response) {
 
 
 // http://localhost:3000/
-app.get('/test', function (request, response) {
+app.get('/XSS_by_Patrick_Dustin', function (request, response) {
     // Render login template
-    response.send("<script>alert(document.cookie)</script>")
+    response.send("<script>alert(document.cookie)</script>" + "XSS Attacke by Patrick und Dustin ")
     //response.render(path.join(__dirname + '/home.ejs'), { buttonName: testVariable });
 });
 
