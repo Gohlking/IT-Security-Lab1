@@ -101,9 +101,10 @@ app.get('/register', function (request, response) {
 // CODE BY DUSTIN UND PATRICK
 app.get('/home', function (request, response) {
 
+    let username = request.session.username;
     // If the user is loggedin
     //if (request.session.loggedin) {
-    connection.query('SELECT text FROM notes ORDER BY ID DESC', function (error, results) {
+    connection.query("SELECT text FROM notes WHERE username= '" + request.session.username + "' ORDER BY ID DESC", function (error, results) {
         // If there is an issue with the query, output the error
         if (error) throw error;
         response.render(path.join(__dirname + '/home.ejs'), { buttonName: results });
