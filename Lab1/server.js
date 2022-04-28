@@ -47,6 +47,8 @@ app.get('/', function (request, response) {
     response.sendFile(path.join(__dirname + '/login.html'));
 });
 
+
+
 // http://localhost:3000/auth
 app.post('/auth', function (request, response) {
     // Capture the input fields
@@ -88,6 +90,13 @@ app.post('/auth', function (request, response) {
 });
 
 
+// http://localhost:3000/
+app.get('/register', function (request, response) {
+
+    response.sendFile(path.join(__dirname + '/register.html'));
+
+});
+
 // http://localhost:3000/home
 // CODE BY DUSTIN UND PATRICK
 app.get('/home', function (request, response) {
@@ -118,6 +127,22 @@ app.post('/post', function (request, response) {
         if (error) throw error;
     });
     response.redirect('/home');
+
+}
+);
+
+app.post('/register', function (request, response) {
+    // Capture the input fields
+    let username = request.body.username;
+    let password = request.body.password;
+
+    if (username && password) {
+        connection.query('INSERT INTO accounts (username,password) VALUES(?,?)', [username, password], function (error, results, fields) {
+            // If there is an issue with the query, output the error
+            if (error) throw error;
+        });
+        response.redirect('/');
+    }
 
 }
 );
