@@ -14,7 +14,7 @@ var mysql = require('mysql');
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'local',
+    password: 'root',
     database: 'itsecurity'
 });
 
@@ -31,12 +31,14 @@ app.use(session({
     secret: "secret",
     resave: true,
     saveUninitialized: true,
+    // Dustin Gohl, Patrick Thuemer
     // Seconds vulnerability, xss attack is possible and cookie can get output by adding
     // onmouseover = alert(document.cookie)
     // console.log(document.cookie)
     cookie: { httpOnly: false },
     keys: [session.loggedin]
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'static')));
@@ -55,9 +57,17 @@ app.post('/auth', function (request, response) {
     let username = request.body.username;
     let password = request.body.password;
     // Ensure the input fields exists and are not empty
-    if (username && password) {
+
+
+
+    //vulnerability fixed
+    // By Dustin Gohl and Patrick Thuemer
+    // if (username && password && checkForSigns(request.body.username)==false && checkForSigns(request.body.password)==false ) {
+
+    //vulnerability not fixed
+    if (username && password ) {
+
         // Execute SQL query that'll select the account from the database based on the specified username and password
-        // https://blog.sqreen.com/preventing-sql-injection-in-node-js-and-other-vulnerabilities/
 
         // First Vulnerability SQL Injection
         // E.g   Username : "dustin" password: "test"  in the database
@@ -66,6 +76,7 @@ app.post('/auth', function (request, response) {
 
         // OLD Query changed to get the SQL Injection:
         //connection.query('SELECT * FROM accounts WHERE username = ? AND password = ?', [username, password], function (error, results, fields) {
+        // Dustin Gohl Patrick Thuemer
 
         connection.query("SELECT * FROM accounts WHERE username = '" + request.body.username + "' AND password = '" + request.body.password + "'", function (error, results) {
             // If there is an issue with the query, output the error
@@ -82,9 +93,11 @@ app.post('/auth', function (request, response) {
             }
             response.end();
         });
+       
     }
+    
     else {
-        response.send('Please enter Username and Password!');
+        response.redirect('/');
         response.end();
     }
 });
@@ -100,6 +113,18 @@ app.get('/register', function (request, response) {
 // http://localhost:3000/home
 // CODE BY DUSTIN UND PATRICK
 app.get('/home', function (request, response) {
+
+    //Frühere Abfrage ob ein Nutzer eingeloggt ist
+    // By Dustin Gohl und Patrick Thuemer
+    /*
+    if(request.session.loggedin){
+        console.log("User ist eingeloggt");
+    }
+    else {
+        response.send("please login to view this page");
+    }
+    */
+
 
     let username = request.session.username;
     // If the user is loggedin
@@ -159,3 +184,10 @@ app.get('/XSS_by_Patrick_Dustin', function (request, response) {
 app.listen(3000);
 
 //
+
+// Function to filter a string for not allowed signs
+// By Dustin Gohl and Patrick Thuemer
+function checkForSigns(string){
+    const notAllowedSigns = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    return notAllowedSigns.test(string);
+}
