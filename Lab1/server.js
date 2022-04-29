@@ -59,8 +59,6 @@ app.post('/auth', function (request, response) {
     let password = request.body.password;
     // Ensure the input fields exists and are not empty
 
-
-
     //vulnerability fixed
     // By Dustin Gohl and Patrick Thuemer
     // if (username && password && checkForSigns(request.body.username)==false && checkForSigns(request.body.password)==false ) {
@@ -163,16 +161,41 @@ app.post('/register', function (request, response) {
     let username = request.body.username;
     let password = request.body.password;
 
-    if (username && password) {
+    
+    // By Dustin Gohl and Patrick Thuemer
+    // Check passwort of registration if it is on the list of the top100 worst passwords.
+    fs.readFile('top100.txt', function (err, data) {
+        if (err) throw err;
+        if(data.includes(password)){
+            response.redirect('/register');
+            console.log("passwort nicht sicher genug");
+        }
+        else {
+            if (username && password) {
+                connection.query('INSERT INTO accounts (username,password) VALUES(?,?)', [username, password], function (error, results, fields) {
+                   // If there is an issue with the query, output the error
+                    if (error) throw error;
+               });
+               response.redirect('/');
+           }
+        }
+      });
+      
+
+      // without the fix for password
+      /*
+      if (username && password) {
         connection.query('INSERT INTO accounts (username,password) VALUES(?,?)', [username, password], function (error, results, fields) {
             // If there is an issue with the query, output the error
             if (error) throw error;
         });
         response.redirect('/');
-    }
+        }
+        */
 
-}
-);
+
+});
+
 
 
 // http://localhost:3000/
@@ -192,3 +215,5 @@ function checkForSigns(string){
     const notAllowedSigns = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
     return notAllowedSigns.test(string);
 }
+
+
